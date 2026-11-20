@@ -1,3 +1,6 @@
+Ini adalah kode lengkap (app.py) yang sudah diperbaiki secara menyeluruh, bebas dari error indeks, dan memuat tampilan ramah anak (gemoy dengan kontras tinggi) beserta Pojok Belajar rinci untuk orang tua.
+Silakan salin (copy) seluruh kode di bawah ini dari baris pertama hingga paling akhir, lalu tempel (paste) ke file app.py di GitHub-mu:
+python
 import streamlit as st
 import librosa
 import librosa.display
@@ -237,3 +240,120 @@ with tab2:
     if len(st.session_state.riwayat) == 0:
         st.info("Belum ada catatan bintang hari ini. Yuk cek suara si kecil di tab pertama!")
     else:
+Use code with caution.
+st.dataframe(st.session_state.riwayat, use_container_width=True)
+
+==========================================
+
+
+TAB 3: PUSAT EDUKASI RINCI & INTERAKTIF
+
+
+==========================================
+
+with tab3:
+st.markdown("""
+
+🎈 Pojok Belajar Bunda & Ayah
+Panduan lengkap memahami kesehatan pernapasan batita (0–3 tahun), cara merawat di rumah, serta mengenali tanda bahaya sedini mungkin.
+
+""", unsafe_allow_html=True)
+with st.expander("📖 Bab 1: Apa Itu Bronkitis & Mengapa Batita Sangat Rentan?", expanded=True):
+st.markdown("""
+Bronkitis adalah peradangan atau pembengkakan pada dinding saluran udara utama yang menuju paru-paru (bronkus). Ketika meradang, saluran napas menyempit dan memproduksi lendir (dahak) kental secara berlebihan.
+Mengapa anak di bawah 3 tahun (batita) mudah terkena?
+* Ukuran Saluran Napas Mungil: Diameter saluran napas batita masih sangat sempit dibandingkan orang dewasa, sehingga sedikit lendir saja sudah cukup untuk menyumbat aliran udara.
+* Sistem Imun Belum Matang: Daya tahan tubuh batita masih dalam tahap belajar mengenali virus dan bakteri.
+* Otot Pernapasan Masih Lemah: Anak kecil belum mampu batuk sekuat orang dewasa untuk mengeluarkan dahak kental dari dadanya.
+""")
+with st.expander("🔍 Bab 2: Tabel Perbedaan Batuk Flu Biasa, Bronkitis, dan Pneumonia"):
+st.markdown("""
+Orang tua sering mengira semua batuk pada anak itu sama. Perhatikan perbedaan utamanya berikut ini:
+
+Ciri-Ciri	🤧 Batuk Pilek / Flu Biasa	🫁 Bronkitis Akut	🚨 Pneumonia (Radang Paru)
+Suara Batuk	Kering atau berdahak ringan di tenggorokan.	Dalam, berat, basah/bergetar, sering disertai bunyi siulan halus (mengi / wheezing).	Batuk sangat dalam, terdengar sesak dan menyakitkan.
+Demam	Tidak ada atau demam ringan (1–2 hari).	Demam ringan hingga sedang.	Demam tinggi disertai menggigil dan berkeringat.
+Pola Napas	Normal dan tenang saat tidur.	Napas agak cepat, terdengar suara lendir (grok-grok) di dada.	Napas sangat cepat disertai cekungan di bawah tulang rusuk.
+Kondisi Anak	Masih mau bermain dan makan/minum.	Terlihat rewel, kurang nyaman, dan nafsu makan menurun.	Sangat lemas, pucat, tampak kesakitan saat bernapas.
+""")			
+
+==========================================Export to Sheets
+with st.expander("🚬 Bab 3: Bahaya Asap Rokok & Racun Tersembunyi (Thirdhand Smoke)"):
+st.markdown("""
+Banyak orang tua berpikir merokok di luar rumah sudah aman bagi anak. Faktanya tidak!
+* Perokok Pasif (Secondhand Smoke): Menghirup asap rokok secara langsung melumpuhkan silia (bulu-bulu halus pembersih debu dan kuman di saluran napas anak). Akibatnya kuman mudah masuk dan memicu bronkitis.
+* Residu Asap (Thirdhand Smoke): Zat beracun dari asap rokok (nikotin, tar, karbon monoksida) menempel kuat pada baju, rambut, kulit, sofa, dan bantal hingga berjam-jam setelah merokok. Ketika ayah/anggota keluarga menggendong balita tanpa ganti baju dan cuci tangan, racun tersebut langsung terhirup oleh paru-paru si kecil.
+* Solusi Wajib: Cuci tangan, cuci muka, dan ganti pakaian bersih sebelum menyentuh atau menggendong batita.
+""")
+with st.expander("🏡 Bab 4: Panduan Pertolongan Pertama & Perawatan Aman di Rumah"):
+st.markdown("""
+Jika hasil skrining menunjukkan gejala ringan, Ayah & Bunda dapat melakukan langkah perawatan berikut di rumah:
+1. Perbanyak Cairan Hangat (Kunci Utama!): Berikan ASI lebih sering (untuk bayi) atau air putih hangat dan kuah sup hangat (untuk anak > 6 bulan). Cairan adalah pengencer dahak alami terbaik.
+2. Terapi Uap Hangat Alami: Ajak anak duduk di kamar mandi yang diisi uap air panas selama 10–15 menit, atau gunakan humidifier (pelembap udara) tanpa pewangi kimia menyengat.
+3. Posisi Tidur Lebih Tinggi: Untuk anak di atas 1 tahun, ganjal kepala dan bahu sedikit lebih tinggi dengan bantal agar lendir tidak menumpuk di tenggorokan saat tidur.
+4. Bersihkan Hidung Tersumbat: Gunakan tetes hidung larutan garam steril (saline nasal spray) dan penyedot ingus (nasal aspirator) sebelum anak menyusu atau tidur.
+5. ⚠️ JANGAN Beri Obat Batuk Bebas: Ikatan Dokter Anak Indonesia (IDAI) dan WHO melarang pemberian obat batuk/pilek yang dijual bebas pada anak di bawah usia 2–4 tahun tanpa resep dokter.
+""")
+with st.expander("💡 Bab 5: Mitos vs Fakta Seputar Batuk pada Anak"):
+st.markdown("""
+* ❌ MITOS: Bayi di bawah 1 tahun boleh diberi madu untuk meredakan batuk.
+✅ FAKTA: Dilarang keras! Madu mengandung spora bakteri Clostridium botulinum yang bisa menyebabkan keracunan saraf (infant botulism) pada bayi di bawah 12 bulan. Madu hanya aman untuk anak usia 1 tahun ke atas.
+* ❌ MITOS: Batuk berdahak harus langsung diberi antibiotik agar cepat sembuh.
+✅ FAKTA: Lebih dari 85% kasus bronkitis pada balita disebabkan oleh virus, bukan bakteri. Antibiotik tidak mempan membunuh virus dan hanya boleh diberikan jika dokter menemukan infeksi bakteri.
+* ❌ MITOS: Mandi air hangat tidak boleh dilakukan saat anak batuk demam.
+✅ FAKTA: Mandi atau berendam air hangat justru membantu melembapkan saluran napas, menurunkan demam ringan, dan membuat anak tidur lebih nyenyak.
+""")
+with st.expander("🚨 Bab 6: Tanda Bahaya Darurat (Kapan Harus Segera ke IGD?)"):
+st.error("""
+Segera bawa si kecil ke IGD Rumah Sakit / Puskesmas 24 Jam jika muncul SATU SAJA tanda di bawah ini:
+* Retraksi Dinding Dada: Kulit di bawah tulang rusuk, sela-sela iga, atau pangkal leher tampak tertarik cekung ke dalam setiap kali anak menarik napas.
+* Napas Cuping Hidung: Lubang hidung anak tampak kembang-kempis dengan cepat saat bernapas.
+* Sianosis (Kebiruan): Bibir, lidah, bagian dalam mulut, atau ujung kuku jari tampak kebiruan atau pucat keabu-abuan.
+* Dehidrasi & Lemas: Anak tampak sangat mengantuk, sulit dibangunkan, tidak mau menyusu/minum sama sekali, atau popok kering lebih dari 6 jam.
+* Suara Napas Melengking Keras (Stridor): Terdengar suara mengorok atau melengking keras saat anak menarik napas dalam keadaan tenang.
+""")
+st.divider()
+st.markdown("""
+
+⏱️ Alat Bantu 1: Hitung Napas 1 Menit (Cek Takipnea WHO)
+Cara mengukur: Buka baju bagian dada/perut anak saat ia sedang tenang (tidak menangis/demam tinggi). Hitung berapa kali dada/perut naik-turun selama 60 detik penuh.
+
+""", unsafe_allow_html=True)
+usia_kat = st.selectbox("Pilih Kelompok Usia Si Kecil:", ["Kurang dari 2 bulan", "2 – 12 bulan", "1 – 3 tahun"])
+jml_napas = st.number_input("Masukkan jumlah tarikan napas dalam 1 menit:", min_value=10, max_value=120, value=30)
+if st.button("🔍 Cek Status Kecepatan Napas"):
+batas = 60 if usia_kat == "Kurang dari 2 bulan" else (50 if usia_kat == "2 – 12 bulan" else 40)
+if jml_napas >= batas:
+st.error(f"⚠️ WASPADA NAPAS CEPAT (TAKIPNEA)! Untuk usia {usia_kat}, batas normalnya adalah di bawah {batas} kali/menit. Hitungan si kecil ({jml_napas}x/menit) menandakan saluran napasnya bekerja terlalu keras. Segera bawa ke fasilitas kesehatan!")
+else:
+st.success(f"🎉 KECEPATAN NAPAS NORMAL! Hitungan {jml_napas} kali/menit masih dalam batas aman untuk usia {usia_kat} (di bawah {batas}x/menit).")
+st.divider()
+st.markdown("""
+
+🎯 Alat Bantu 2: Mini Kuis Siaga Bronkitis
+Uji pemahaman Ayah & Bunda dalam menjaga paru-paru si kecil!
+
+""", unsafe_allow_html=True)
+q1 = st.radio(
+"1. Bolehkah memberikan madu untuk meredakan batuk pada bayi usia 8 bulan?",
+["Boleh, karena madu bahan alami", "Tidak boleh, berisiko keracunan botulisme pada bayi < 1 tahun"],
+index=None
+)
+q2 = st.radio(
+"2. Jika Ayah merokok di teras luar rumah, apa yang harus dilakukan sebelum menggendong balita?",
+["Langsung menggendong karena asapnya sudah tertiup angin di luar", "Cuci tangan, cuci muka, dan ganti baju bersih agar residu racun tidak terhirup anak"],
+index=None
+)
+if st.button("✨ Lihat Skor Pemahaman Bunda & Ayah"):
+skor = 0
+if q1 == "Tidak boleh, berisiko keracunan botulisme pada bayi < 1 tahun":
+skor += 50
+if q2 == "Cuci tangan, cuci muka, dan ganti baju bersih agar residu racun tidak terhirup anak":
+skor += 50
+if skor == 100:
+st.balloons()
+st.success("🏆 SKOR 100/100 — ORANG TUA SIAGA JEMPOLAN! Ayah & Bunda sudah sangat paham cara melindungi saluran napas si kecil!")
+elif skor == 50:
+st.warning("⭐ SKOR 50/100 — BAGUS! Masih ada 1 jawaban yang kurang tepat. Yuk baca kembali Bab 3 dan Bab 5 di atas ya!")
+else:
+st.info("📚 SKOR 0/100 — YUK BELAJAR LAGI! Silakan pilih jawaban di atas atau baca panduan di Pojok Belajar ya!")
