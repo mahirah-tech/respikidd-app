@@ -246,3 +246,4 @@ with tab1:
                 # Simpan ke Riwayat
                 st.session_state.riwayat.append({
                     "Waktu": datetime.now().strftime("%d-%m-%Y %H:%M"),
+                }
