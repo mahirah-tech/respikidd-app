@@ -56,13 +56,6 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
         margin-bottom: 16px;
     }
-    .edu-box {
-        background-color: #F8FAFC;
-        border-left: 6px solid #5AB2FF;
-        padding: 14px 18px;
-        border-radius: 12px;
-        margin-bottom: 12px;
-    }
     div.stButton > button:first-child {
         background: linear-gradient(90deg, #FF6B6B 0%, #FF8E3C 100%) !important;
         color: #FFFFFF !important;
@@ -191,7 +184,6 @@ with tab1:
                 ax.set_title(f'Lukisan Gelombang Suara {nama_anak or "Si Kecil"} 🎨')
                 plt.tight_layout()
 
-                # Menyamakan lebar grafik ke 128 kolom secara aman
                 baris, kolom = S_dB.shape
                 if kolom < 128:
                     S_resized = np.pad(S_dB, ((0, 0), (0, 128 - kolom)), mode='constant')
@@ -200,8 +192,8 @@ with tab1:
 
                 pred = cnn_model.predict(S_resized.reshape(1, 128, 128, 1))
                 hasil_list = pred.flatten().tolist()
-                prob_normal = float(hasil_list)
-                prob_bronkitis = float(hasil_list)
+                prob_normal = float(hasil_list.pop(0))
+                prob_bronkitis = float(hasil_list.pop(0))
 
                 st.balloons()
                 st.success(f"🎉 Yey! {nama_anak or 'Si Kecil'} hebat sekali! Ini hadiah **{stiker_pilihan}** untukmu! ⭐")
@@ -241,3 +233,7 @@ with tab1:
 # TAB 2: RIWAYAT PEMERIKSAAN
 # ==========================================
 with tab2:
+    st.markdown('<div class="gemoy-card"><h3>🌟 Buku Bintang & Stiker Si Kecil</h3><p>Catatan hasil pemeriksaan ini bisa Ayah & Bunda tunjukkan langsung kepada dokter:</p></div>', unsafe_allow_html=True)
+    if len(st.session_state.riwayat) == 0:
+        st.info("Belum ada catatan bintang hari ini. Yuk cek suara si kecil di tab pertama!")
+    else:
