@@ -1,0 +1,6 @@
+streamlit
+librosa
+noisereduce
+tensorflow-cpu
+matplotlib
+numpy
