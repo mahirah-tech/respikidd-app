@@ -8,61 +8,122 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from datetime import datetime
 
-# Pengaturan Halaman Ramah Anak
+# Pengaturan Halaman
 st.set_page_config(page_title="RespiKidd - Sahabat Napas Si Kecil", page_icon="🧸", layout="centered")
 
-# --- CUSTOM CSS UNTUK TAMPILAN CERIA & RAMAH ANAK ---
+# --- CUSTOM CSS: KONTRAS TINGGI (ANTI-DARK MODE BUG) & SUPER GEMOY ---
 st.markdown("""
 <style>
-    /* Latar belakang biru langit pastel yang menenangkan */
+    /* Paksa latar belakang pastel cerah & teks gelap agar kontras 100% terbaca */
     .stApp {
-        background: linear-gradient(180deg, #E3F4FE 0%, #FFF9E6 100%);
+        background: linear-gradient(180deg, #DDF2FD 0%, #FEF6E4 100%) !important;
+        color: #1E293B !important;
     }
-    /* Kartu sambutan maskot */
+    
+    /* Paksa semua label, judul, paragraf, dan teks widget berwarna gelap tajam */
+    h1, h2, h3, h4, p, span, label, div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stWidgetLabel"] p, .stRadio label, .stCheckbox label {
+        color: #1E293B !important;
+    }
+
+    /* Kotak input (Text, Number, Selectbox) berlatar putih bersih dengan teks hitam */
+    input, textarea, select, div[data-baseweb="select"] > div, div[data-baseweb="input"] > div {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        border: 2px solid #9BBEC8 !important;
+        border-radius: 15px !important;
+    }
+
+    /* Banner Maskot Utama */
     .kid-banner {
         background-color: #FFFFFF;
-        border: 3px solid #7BD3EA;
-        border-radius: 25px;
-        padding: 20px;
+        border: 4px solid #5AB2FF;
+        border-radius: 28px;
+        padding: 22px;
         text-align: center;
-        box-shadow: 0 8px 16px rgba(123, 211, 234, 0.25);
+        box-shadow: 0 10px 20px rgba(90, 178, 255, 0.25);
         margin-bottom: 20px;
     }
     .kid-banner h1 {
-        color: #FF6B6B;
-        font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif;
-        margin-bottom: 5px;
+        color: #E11D48 !important;
+        font-family: 'Trebuchet MS', sans-serif;
+        font-size: 32px !important;
+        margin-bottom: 8px;
     }
     .kid-banner p {
-        color: #4A5568;
-        font-size: 16px;
+        color: #334155 !important;
+        font-size: 16px !important;
+        font-weight: 500;
     }
-    /* Tombol utama besar, bulat, dan berwarna cerah */
+
+    /* Kartu Putih Pembungkus Konten agar tidak menyatu dengan background */
+    .gemoy-card {
+        background-color: #FFFFFF;
+        border-radius: 22px;
+        padding: 18px 22px;
+        border: 3px solid #FFD1DA;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+        margin-bottom: 16px;
+    }
+
+    /* Tombol Utama Besar, Bulat, dan Teks Putih Kontras */
     div.stButton > button:first-child {
-        background-color: #FF8E3C;
-        color: white;
-        border-radius: 25px;
-        border: none;
-        padding: 12px 24px;
-        font-size: 18px;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(255, 142, 60, 0.4);
-        transition: all 0.2s ease;
+        background: linear-gradient(90deg, #FF6B6B 0%, #FF8E3C 100%) !important;
+        color: #FFFFFF !important;
+        border-radius: 30px !important;
+        border: 3px solid #FFFFFF !important;
+        padding: 14px 28px !important;
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        box-shadow: 0 6px 15px rgba(255, 107, 107, 0.45) !important;
+    }
+    div.stButton > button:first-child p {
+        color: #FFFFFF !important;
     }
     div.stButton > button:first-child:hover {
-        background-color: #FF6B6B;
-        transform: scale(1.02);
+        transform: scale(1.03);
     }
-    /* Kotak konten bulat */
+
+    /* Tab Menu agar jelas terbaca */
+    button[data-baseweb="tab"] {
+        background-color: #FFFFFF !important;
+        border-radius: 15px 15px 0 0 !important;
+        margin-right: 4px !important;
+        border: 2px solid #CBD5E1 !important;
+    }
+    button[data-baseweb="tab"] p {
+        color: #0F172A !important;
+        font-weight: bold !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] {
+        background-color: #5AB2FF !important;
+        border-color: #5AB2FF !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] p {
+        color: #FFFFFF !important;
+    }
+
+    /* Expander Edukasi Putih Bersih */
     div[data-testid="stExpander"] {
+        background-color: #FFFFFF !important;
+        border-radius: 18px !important;
+        border: 2px solid #93C5FD !important;
+    }
+    
+    /* Metric / Angka Hasil */
+    div[data-testid="stMetric"] {
         background-color: #FFFFFF;
+        padding: 15px;
         border-radius: 18px;
-        border: 2px solid #F6D6D6;
+        border: 2px solid #CBD5E1;
+    }
+    div[data-testid="stMetricValue"] > div {
+        color: #0F172A !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Inisialisasi Riwayat di Memori Sesi
+# Inisialisasi Riwayat
 if "riwayat" not in st.session_state:
     st.session_state.riwayat = []
 
@@ -83,38 +144,44 @@ def load_cnn_model():
 
 cnn_model = load_cnn_model()
 
-# --- BANNER MASKOT RAMAH ANAK ---
+# --- BANNER MASKOT ---
 st.markdown("""
 <div class="kid-banner">
-    <h1>🧸🩺 Halo, Aku RespiKidd!</h1>
-    <p>Yuk, periksa suara batuk si kecil bersama <b>Dokter Beruang</b>! Cepat, seru, dan tanpa rasa sakit ✨</p>
+    <h1>🧸🩺 Halo, Aku Dokter Beruang!</h1>
+    <p>Selamat datang di <b>RespiKidd</b>! Yuk periksa suara batuk si kecil dengan cara yang seru, lembut, dan tanpa rasa takut 🌈✨</p>
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["🎤 Cek Suara Si Kecil", "🌟 Buku Bintang (Riwayat)", "🎈 Pojok Belajar Bunda & Ayah"])
+tab1, tab2, tab3 = st.tabs(["🎤 Cek Suara Batuk", "🌟 Buku Bintang", "🎈 Pojok Belajar"])
 
 # ==========================================
-# TAB 1: SKRINING BATUK & GEJALA KLINIS
+# TAB 1: SKRINING BATUK & INTERAKSI ANAK
 # ==========================================
 with tab1:
-    st.markdown("### 🐣 1. Kenalan Dulu Yuk!")
+    st.markdown('<div class="gemoy-card"><h3>🐣 Langkah 1: Kenalan & Pilih Hadiah Stiker!</h3><p>Biar si kecil makin semangat, pilih dulu stiker hadiah keberaniannya ya:</p></div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
     with col1:
-        nama_anak = st.text_input("Nama Panggilan Si Kecil:", placeholder="Contoh: Adik Bintang 🌟")
+        nama_anak = st.text_input("Nama Panggilan Si Kecil:", placeholder="Contoh: Adik Kimi 🌟")
     with col2:
         usia_bulan = st.number_input("Usia Si Kecil (Bulan):", min_value=1, max_value=36, value=12)
 
+    stiker_pilihan = st.radio(
+        "Pilih Stiker Hadiah untuk Si Kecil:",
+        ["🦖 Dino Pemberani", "🦄 Kuda Poni Ajaib", "🚀 Roket Luar Angkasa", "🐱 Kucing Lucu"],
+        horizontal=True
+    )
+
     gejala = st.multiselect(
-        "Apakah si kecil merasakan hal ini juga? (Boleh pilih lebih dari satu):",
+        "Apakah si kecil merasakan tanda ini juga? (Boleh pilih lebih dari satu):",
         ["🤒 Badan hangat / Demam", " whistles / Bunyi napas 'ngik-ngik' (Mengi)", "💨 Napas terasa cepat", "💧 Banyak dahak / lendir"]
     )
     asap_rokok = st.radio("Apakah ada asap rokok di sekitar rumah?", ["Tidak ada, udara bersih! 🌿", "Ya, ada yang merokok 🚬"], horizontal=True)
 
-    st.markdown("### 🎙️ 2. Rekam Suara Batuk ke Mikrofon Ajaib!")
-    st.info("💡 **Tips untuk Ayah/Bunda:** Ajak si kecil bermain sambil mendekatkan HP sekitar 10–15 cm saat anak batuk ya!")
+    st.markdown('<div class="gemoy-card"><h3>🎙️ Langkah 2: Tiup & Batuk ke Mikrofon Ajaib!</h3><p>Dekatkan HP sekitar 10–15 cm dari mulut si kecil saat batuk, lalu tekan tombol rekam di bawah ini:</p></div>', unsafe_allow_html=True)
     
-    audio_rekam = st.audio_input("Tekan tombol mikrofon merah untuk mulai merekam:")
-    audio_upload = st.file_uploader("Atau pilih rekaman suara dari galeri HP (WAV/MP3):", type=["wav", "mp3", "ogg"])
+    audio_rekam = st.audio_input("Tekan ikon mikrofon merah untuk merekam:")
+    audio_upload = st.file_uploader("Atau unggah file rekaman suara (WAV/MP3):", type=["wav", "mp3", "ogg"])
 
     audio_source = audio_rekam if audio_rekam is not None else audio_upload
 
@@ -122,7 +189,7 @@ with tab1:
         if audio_source is None:
             st.warning("🐻 Wah, suara batuknya belum masuk nih! Yuk rekam atau unggah suaranya dulu ya.")
         else:
-            with st.spinner("🐻 Dokter Beruang sedang mendengarkan dan menggambar gelombang suara..."):
+            with st.spinner("🐻 Dokter Beruang sedang mendengarkan dan melukis gelombang suara..."):
                 # Proses Audio
                 y, sr = librosa.load(audio_source, sr=22050)
                 y_clean = nr.reduce_noise(y=y, sr=sr)
@@ -131,7 +198,7 @@ with tab1:
                 S = librosa.feature.melspectrogram(y=y_norm, sr=sr, n_mels=128)
                 S_dB = librosa.power_to_db(S, ref=np.max)
 
-                # Buat Grafik Mel-Spectrogram Cerah (viridis)
+                # Buat Grafik Mel-Spectrogram Cerah
                 fig, ax = plt.subplots(figsize=(6, 3))
                 img = librosa.display.specshow(S_dB, x_axis='time', y_axis='mel', sr=sr, ax=ax, cmap='viridis')
                 fig.colorbar(img, ax=ax, format='%+2.0f dB')
@@ -149,11 +216,10 @@ with tab1:
                 prob_normal = float(pred[0][0])
                 prob_bronkitis = float(pred[0][1])
 
-                # Animasi Balon Hadiah Keberanian!
+                # Animasi Perayaan!
                 st.balloons()
-                st.success(f"🎉 Hebat sekali {nama_anak or 'Si Kecil'}! Ini bintang keberanian untukmu ⭐")
+                st.success(f"🎉 Yey! {nama_anak or 'Si Kecil'} hebat sekali! Ini hadiah **{stiker_pilihan}** untukmu! ⭐")
 
-                st.divider()
                 st.subheader("🎨 Hasil Lukisan Suara & Analisis AI")
                 st.pyplot(fig)
 
@@ -166,7 +232,7 @@ with tab1:
                     status = "PERLU DIPERIKSA DOKTER 🏥"
                     st.error(
                         f"🚨 **PESAN DOKTER BERUANG: {status}**\n\n"
-                        "Suara batuk dan gejala si kecil menunjukkan tanda-tanda yang mirip dengan **Bronkitis**. "
+                        "Suara batuk dan gejala si kecil menunjukkan tanda yang mirip dengan **Bronkitis**. "
                         "Jangan panik ya Ayah & Bunda, yuk segera ajak si kecil bertemu dokter atau bidan di Puskesmas terdekat agar cepat sehat kembali!"
                     )
                 else:
@@ -180,51 +246,3 @@ with tab1:
                 # Simpan ke Riwayat
                 st.session_state.riwayat.append({
                     "Waktu": datetime.now().strftime("%d-%m-%Y %H:%M"),
-                    "Nama Si Kecil": nama_anak or "Adik Hebat",
-                    "Usia (Bln)": usia_bulan,
-                    "Skor Bronkitis": f"{prob_bronkitis*100:.1f}%",
-                    "Pesan Dokter": status
-                })
-
-# ==========================================
-# TAB 2: RIWAYAT PEMERIKSAAN
-# ==========================================
-with tab2:
-    st.subheader("🌟 Buku Bintang Pemeriksaan Si Kecil")
-    st.write("Catatan ini bisa Ayah & Bunda tunjukkan langsung kepada dokter saat periksa:")
-    if len(st.session_state.riwayat) == 0:
-        st.info("Belum ada catatan bintang hari ini. Yuk cek suara si kecil di tab pertama!")
-    else:
-        st.dataframe(st.session_state.riwayat, use_container_width=True)
-
-# ==========================================
-# TAB 3: PUSAT EDUKASI & KALKULATOR TAKIPNEA
-# ==========================================
-with tab3:
-    st.subheader("🎈 Pojok Belajar Bunda & Ayah")
-    
-    with st.expander("🐻 1. Kenapa Saluran Napas Balita Mudah Teriritasi?", expanded=True):
-        st.write(
-            "Saluran napas anak di bawah 3 tahun masih mungil dan lembut! Saat terkena virus atau asap rokok, "
-            "dinding saluran napas bisa membengkak dan menghasilkan lendir (bronkitis). "
-            "Menjaga rumah bebas asap rokok adalah hadiah terbaik untuk paru-paru si kecil 🌿."
-        )
-        
-    with st.expander("🎵 2. Membedakan Bunyi Batuk Biasa vs Bronkitis"):
-        st.markdown(
-            "- **Batuk Flu Biasa:** Terdengar ringan di tenggorokan, anak tetap ceria bermain.\n"
-            "- **Batuk Bronkitis:** Terdengar **lebih dalam, berat, dan basah**, kadang disertai suara siulan halus seperti peluit kecil saat mengembuskan napas (**Mengi / Wheezing**)."
-        )
-        
-    with st.expander("🚑 3. Tanda Si Kecil Harus Segera ke Dokter / IGD"):
-        st.markdown(
-            "Segera bawa ke fasilitas kesehatan terdekat jika melihat tanda ini:\n"
-            "- Kulit di sela tulang rusuk atau bawah leher tampak **tertarik cekung ke dalam** saat menarik napas.\n"
-            "- Bibir atau ujung jari tampak **pucat atau kebiruan**.\n"
-            "- Si kecil tampak sangat lemas, terus mengantuk, atau menolak menyusu/minum."
-        )
-
-    st.divider()
-    st.subheader("⏱️ Permainan Hitung Napas 1 Menit (Cek Takipnea)")
-    st.write("Hitung berapa kali perut/dada si kecil naik-turun selama 60 detik saat ia sedang tenang:")
-    usia_kat = st.selectbox("Pilih Usia Si Kecil:", ["Kurang dari 2 bulan", "2 – 12 bulan", "1 – 3 tahun"])
